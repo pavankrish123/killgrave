@@ -14,6 +14,7 @@ import (
 // ImposterHandler create specific handler for the received imposter
 func ImposterHandler(imposter Imposter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// hack
 		log.Printf("request headers: %v", r.Header)
 
 		if imposter.Delay() > 0 {
@@ -41,6 +42,7 @@ func writeHeaders(imposter Imposter, w http.ResponseWriter) {
 	}
 }
 
+// hack
 func writeOpAmpServerToAgentProtoBodyHack(imposter Imposter, w http.ResponseWriter) {
 	log.Printf("Wring ServerToAgent Protobuf from Payload")
 	wb := []byte(imposter.Response.Body)
@@ -54,7 +56,10 @@ func writeOpAmpServerToAgentProtoBodyHack(imposter Imposter, w http.ResponseWrit
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	data, _ := proto.Marshal(&msg)
+	data, err := proto.Marshal(&msg)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 	w.Write(data)
 
 }
