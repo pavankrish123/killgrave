@@ -59,6 +59,7 @@ func writeOpAmpServerToAgentProtoBodyHack(imposter Imposter, w http.ResponseWrit
 	data, err := proto.Marshal(&msg)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 	w.Write(data)
 
